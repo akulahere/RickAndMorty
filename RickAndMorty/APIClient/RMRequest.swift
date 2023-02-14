@@ -50,6 +50,8 @@ final class RMRequest {
         .joined(separator: "&")
       string += argumentString
     }
+    
+    print("url: \(string)")
     return string
   }
 
