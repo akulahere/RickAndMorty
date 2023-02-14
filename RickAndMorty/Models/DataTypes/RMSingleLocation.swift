@@ -10,5 +10,5 @@ import Foundation
 
 struct RMSingleLocation: Codable {
   let name: String
-  let url: URL
+  let url: String
 }

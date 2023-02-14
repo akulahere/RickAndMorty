@@ -12,7 +12,7 @@ import Foundation
 final class RMRequest {
   /// API Constants
   private struct Constansts {
-    static let baseUrl = "https://rickandmortyapi.com"
+    static let baseUrl = "https://rickandmortyapi.com/api"
   }
   
   
@@ -20,7 +20,7 @@ final class RMRequest {
   private let endpoint: RMEndPoint
   
   /// Path components for API, if any
-  private let pathComponents: Set<String>
+  private let pathComponents: [String]
   
   
   /// Queary argoments for API, if any
@@ -71,12 +71,16 @@ final class RMRequest {
   ///   - pathComponents: Collection of Path components
   ///   - queryParameteres: Collection of query parameteres
   public init(endpoint: RMEndPoint,
-              pathComponents: Set<String> = [],
+              pathComponents: [String] = [],
               queryParameteres: [URLQueryItem] = []) {
     self.endpoint = endpoint
     self.pathComponents = pathComponents
     self.queryParameters = queryParameteres
   }
   
-  // https://rickandmortyapi.com/api/character
+}
+
+
+extension RMRequest {
+  static let listCharacterRequests = RMRequest(endpoint: .character)
 }

@@ -18,9 +18,9 @@ struct RMCharacter: Codable {
   let gender: RMCharacterGender
   let origin: RMOrigin
   let location: RMSingleLocation
-  let image: URL
-  let episode: [URL]
-  let url: URL
-  let created: Date
+  let image: String
+  let episode: [String]
+  let url: String
+  let created: String
 }
 

@@ -16,12 +16,32 @@ final class RMCharacterViewController: UIViewController {
     title = "Characters"
     
     let request = RMRequest(endpoint: .character, queryParameteres: [URLQueryItem(name: "name", value: "Rick"), URLQueryItem(name: "status", value: "alive")])
-    print(request.url)
     
     
-
+//    RMService.shared.execute(request, expecting: RMCharacter.self) { result in
+//      switch result {
+//      case .success:
+//        break
+//      case .failure(let error):
+//        print(String(describing: error))
+//      }
+//    }
+    
+    RMService.shared.execute(.listCharacterRequests, expecting: RMGetAllCharacterResponse.self) { result in
+      switch result {
+      case .success(let model):
+        print("Total: "+String(model.info.count))
+        print("Page result count: " + String(model.results.count))
+        print(model.results.first)
+      case .failure(let error):
+        print(error)
+      }
     }
+    
+    
+    
   }
-  
-  
 }
+
+
+
