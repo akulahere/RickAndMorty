@@ -43,7 +43,7 @@ class RMCharacterCollectionViewCell: UICollectionViewCell {
     contentView.backgroundColor = .secondarySystemBackground
     contentView.addSubviews(imageView, nameLabel, statusLabel)
     addConstraints()
-
+    setUpLayer()
   }
   
   required init?(coder: NSCoder) {
