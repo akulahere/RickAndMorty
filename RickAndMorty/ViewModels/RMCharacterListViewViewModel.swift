@@ -7,13 +7,39 @@
 
 import UIKit
 
+protocol RMCharacterListViewViewModelDelegate: AnyObject {
+  func didLoadInitialCharacter()
+}
+
 final class RMCharacterListViewViewModel: NSObject {
-  func fetchCharacters() {
-    RMService.shared.execute(.listCharacterRequests, expecting: RMGetAllCharacterResponse.self) { result in
+  
+  public weak var delegate: RMCharacterListViewViewModelDelegate?
+  
+  private var characters: [RMCharacter] = [] {
+    didSet {
+      for character in characters {
+        let viewModel = RMCharacterCollectionViewCellViewModel(characteName: character.name,
+                                                               characterStatus: character.status,
+                                                               characterImageUrl: character.image)
+        cellViewModels.append(viewModel)
+      }
+    }
+  }
+  
+  private var cellViewModels: [RMCharacterCollectionViewCellViewModel] = []
+  
+  public func fetchCharacters() {
+    RMService.shared.execute(.listCharacterRequests,
+                             expecting: RMGetAllCharacterResponse.self)
+    {[weak self] result in
       switch result {
-      case .success(let model):
-        print("Total: "+String(model.info.count))
-        print("Page result count: " + String(model.results.first?.image ?? "No image"))
+      case .success(let responseModel):
+        let results = responseModel.results
+        self?.characters = results
+        DispatchQueue.main.async {
+          self?.delegate?.didLoadInitialCharacter()
+        }
+
       case .failure(let error):
         print(error)
       }
@@ -31,9 +57,7 @@ extension RMCharacterListViewViewModel: UICollectionViewDataSource, UICollection
                                                         for: indexPath) as? RMCharacterCollectionViewCell else {
       fatalError("Unsupported Cell")
     }
-    let viewModel = RMCharacterCollectionViewCellViewModel(characteName: "Afraz",
-                                                           characterStatus: .alive,
-                                                           characterImageUrl: URL(string: "https://rickandmortyapi.com/api/character/avatar/1.jpeg"))
+    let viewModel = cellViewModels[indexPath.row]
     
     cell.configure(with: viewModel)
     return cell

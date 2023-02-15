@@ -15,6 +15,11 @@ final class RMCharacterViewController: UIViewController {
     super.viewDidLoad()
     view.backgroundColor = .systemBackground
     title = "Characters"
+
+    setUpView()
+  }
+  
+  private func setUpView() {
     view.addSubview(characterListView)
     NSLayoutConstraint.activate([
       characterListView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -22,7 +27,6 @@ final class RMCharacterViewController: UIViewController {
       characterListView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
       characterListView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
     ])
-    
   }
 }
 
