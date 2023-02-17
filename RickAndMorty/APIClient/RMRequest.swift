@@ -80,6 +80,8 @@ final class RMRequest {
     self.queryParameters = queryParameteres
   }
   
+  /// Attempt to creatre request
+  /// - Parameter url: urtl to parth
   convenience init?(url: URL) {
     let string = url.absoluteString
     if !string.contains(Constansts.baseUrl) {
@@ -90,8 +92,13 @@ final class RMRequest {
       let components = trimmed.components(separatedBy: "/")
       if !components.isEmpty {
         let endpointString = components[0]
+        var pathComponents: [String] = []
+        if components.count > 1 {
+          pathComponents = components
+          pathComponents.removeFirst()
+        }
         if let rmEndpoint = RMEndPoint(rawValue: endpointString) {
-          self.init(endpoint: rmEndpoint)
+          self.init(endpoint: rmEndpoint, pathComponents: pathComponents)
           return
         }
       }
