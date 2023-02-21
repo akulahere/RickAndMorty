@@ -51,7 +51,6 @@ final class RMRequest {
       string += argumentString
     }
     
-    print("url: \(string)")
     return string
   }
 

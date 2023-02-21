@@ -39,9 +39,8 @@ class RMCharacterDetailView: UIView {
   
   private func addConstraints() {
     guard let collectionView = collectionView else {
-      print("No collection view")
-      return  }
-    print("CV constaints activated")
+      return
+    }
     NSLayoutConstraint.activate([
       spinner.widthAnchor.constraint(equalToConstant: 100),
       spinner.heightAnchor.constraint(equalToConstant: 100),
@@ -59,7 +58,6 @@ class RMCharacterDetailView: UIView {
     let layout = UICollectionViewCompositionalLayout { sectionIndex, _ in
       return self.createSection(for: sectionIndex)
     }
-    print(layout.configuration)
     let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
     collectionView.register(RMCharacterPhotoCollectionViewCell.self,
                             forCellWithReuseIdentifier: RMCharacterPhotoCollectionViewCell.cellIdentifier)
@@ -68,7 +66,6 @@ class RMCharacterDetailView: UIView {
     collectionView.register(RMCharacterEpisodeCollectionViewCell.self,
                             forCellWithReuseIdentifier: RMCharacterEpisodeCollectionViewCell.cellIdentifier)
     collectionView.translatesAutoresizingMaskIntoConstraints = false
-    print("Create collection view")
     return collectionView
   }
   

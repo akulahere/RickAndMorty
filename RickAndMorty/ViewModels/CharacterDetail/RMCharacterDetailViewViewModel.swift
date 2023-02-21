@@ -58,7 +58,6 @@ final class RMCharacterDetailViewViewModel {
   public func fetchCharacterData() {
     guard let url = requestURL,
           let request = RMRequest(url: url) else {
-      print("Failed to create")
       return
     }
     RMService.shared.execute(request, expecting: RMCharacter.self) { result in
@@ -92,7 +91,6 @@ final class RMCharacterDetailViewViewModel {
       subitems: [item]
     )
     let section = NSCollectionLayoutSection(group: group)
-    print("Section created")
     return section
   }
   
@@ -118,7 +116,6 @@ final class RMCharacterDetailViewViewModel {
       subitems: [item, item]
     )
     let section = NSCollectionLayoutSection(group: group)
-    print("Section created")
     return section
   }
   

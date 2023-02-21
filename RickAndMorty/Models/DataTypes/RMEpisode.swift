@@ -9,14 +9,14 @@ import Foundation
 
 import Foundation
 
-struct RMEpisode: Codable {
+struct RMEpisode: Codable, RMEpisodeDataRender {
   let id: Int
   let name: String
   let airDate: String
   let episode: String
-  let characters: [URL]
+  let characters: [String]
   let url: URL
-  let created: Date
+  let created: String
 
   private enum CodingKeys: String, CodingKey {
     case id
