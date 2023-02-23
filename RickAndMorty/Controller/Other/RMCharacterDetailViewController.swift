@@ -74,12 +74,12 @@ extension RMCharacterDetailViewController: UICollectionViewDelegate, UICollectio
     case .episodes(let viewModels):
       return viewModels.count
     }
-
+    
   }
   
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     let sectionType = viewModel.sections[indexPath.section]
-
+    
     switch sectionType {
     case .photo(let viewModel):
       guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RMCharacterPhotoCollectionViewCell.cellIdentifier,
@@ -87,8 +87,8 @@ extension RMCharacterDetailViewController: UICollectionViewDelegate, UICollectio
       else { fatalError()  }
       cell.configure(with: viewModel)
       return cell
-
-
+      
+      
     case .information(let viewModels):
       guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RMCharacterInfoCollectionViewCell.cellIdentifier,
                                                           for: indexPath) as? RMCharacterInfoCollectionViewCell
@@ -100,10 +100,25 @@ extension RMCharacterDetailViewController: UICollectionViewDelegate, UICollectio
                                                           for: indexPath) as? RMCharacterEpisodeCollectionViewCell
       else { fatalError()  }
       cell.configure(with: viewModels[indexPath.row])
-
+      
       return cell
     }
   }
   
+  func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    let sectionType = viewModel.sections[indexPath.section]
+    
+    switch sectionType {
+    case .photo, .information:
+      break
+    case .episodes(let viewModel):
+      let episodes = self.viewModel.episodes
+      let selection = episodes[indexPath.row]
+      let vc = RMEpisodeDetailViewController(url: selection)
+      navigationController?.pushViewController(vc, animated: true)
+      
+      
+    }
+  }
   
 }
