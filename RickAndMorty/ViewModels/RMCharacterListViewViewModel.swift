@@ -148,7 +148,7 @@ extension RMCharacterListViewViewModel: UICollectionViewDataSource, UICollection
     let width = (bounds.width - 30) / 2
     let height = width * 1.5
     return CGSize(width: width,
-                  height: height)
+                  height: height * 0.8)
   }
   
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

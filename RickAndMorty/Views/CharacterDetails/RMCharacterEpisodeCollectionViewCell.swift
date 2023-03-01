@@ -34,19 +34,23 @@ final class RMCharacterEpisodeCollectionViewCell: UICollectionViewCell {
     return label
   }()
   
+  // MARK: - Init
   
   override init(frame: CGRect) {
     super.init(frame: frame)
     contentView.backgroundColor = .tertiarySystemBackground
-    contentView.layer.cornerRadius = 8
-    contentView.layer.borderWidth = 2
-    contentView.layer.borderColor = UIColor.systemBlue.cgColor
+    setUpLayer()
     contentView.addSubviews(seasonLabel, nameLabel, airDateLabel)
     setUpConstaints()
   }
   
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+  
+  private func setUpLayer() {
+    contentView.layer.cornerRadius = 8
+    contentView.layer.borderWidth = 2
   }
   
   private func setUpConstaints() {
@@ -83,5 +87,7 @@ final class RMCharacterEpisodeCollectionViewCell: UICollectionViewCell {
       
     }
     viewModel.fetchEpisode()
+    contentView.layer.borderColor = viewModel.borderColor.cgColor
+
   }
 }
