@@ -15,12 +15,19 @@ class RMEpisodeDetailViewViewModel {
   private let endpointUrl: URL?
   public weak var delegate: RMEpisodeDetailViewViewModelDelegate?
   
-  private var dataTuple: (RMEpisode, [RMCharacter])? {
+  private var dataTuple: (episode: RMEpisode, characters: [RMCharacter])? {
     didSet {
+      createCellViewModel()
       delegate?.didFetchEpisodeDetails()
     }
   }
+  
+  enum SectionType {
+    case information(viewmodel: [RMEpisodeInfoCollectionViewCellViewModel])
+    case characters(viewmodel: [RMCharacterCollectionViewCellViewModel])
+  }
 
+  public private(set) var cellViewModels: [SectionType] = []
   
   // MARK: - Init
   
@@ -29,10 +36,25 @@ class RMEpisodeDetailViewViewModel {
     fetchEpisodeData()
   }
   
-  // MARK: - Public
   
   // MARK: - Private
   
+  func createCellViewModel() {
+    guard let dataTuple = dataTuple else { return  }
+    let episode = dataTuple.episode
+    let characters = dataTuple.characters
+    cellViewModels = [
+      .information(viewmodel: [
+        .init(title: "Episode Name", value: episode.name),
+        .init(title: "Air date", value: episode.airDate),
+        .init(title: "Episode", value: episode.episode),
+        .init(title: "Created", value: episode.created),
+      ]),
+      .characters(viewmodel: characters.compactMap({ character in
+        return RMCharacterCollectionViewCellViewModel(characteName: character.name, characterStatus: character.status, characterImageUrl: character.image)
+      }))
+    ]
+  }
   
   /// Fetch episode model
   public func fetchEpisodeData() {
@@ -79,7 +101,7 @@ class RMEpisodeDetailViewViewModel {
     }
     
     group.notify(queue: .main) {
-      self.dataTuple = (episode, charcacters)
+      self.dataTuple = (episode: episode, characters: charcacters)
     }
   }
 }
