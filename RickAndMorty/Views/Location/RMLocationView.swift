@@ -9,8 +9,9 @@ import UIKit
 
 class RMLocationView: UIView {
 
-  private var viewModel: RMLcationViewViewModel? {
+  private var viewModel: RMLocationViewViewModel? {
     didSet {
+      print("stop animation")
       spinner.stopAnimating()
       tableView.isHidden = false
       tableView.reloadData()
@@ -25,7 +26,7 @@ class RMLocationView: UIView {
     table.translatesAutoresizingMaskIntoConstraints = false
     table.alpha = 0
     table.isHidden = true
-    table.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+    table.register(RMLocationTableViewCell.self, forCellReuseIdentifier: RMLocationTableViewCell.cellIdentifier)
     return table
   }()
   
@@ -43,12 +44,17 @@ class RMLocationView: UIView {
     addSubviews(tableView, spinner)
     spinner.startAnimating()
     addConstraints()
+    configureTable()
   }
   
   required init?(coder: NSCoder) {
     fatalError()
   }
   
+  private func configureTable() {
+    tableView.delegate = self
+    tableView.dataSource  = self
+  }
   private func addConstraints() {
     NSLayoutConstraint.activate([
       spinner.heightAnchor.constraint(equalToConstant: 100),
@@ -63,9 +69,47 @@ class RMLocationView: UIView {
     ])
   }
   
-  func configure(with viewModel: RMLcationViewViewModel) {
+  func configure(with viewModel: RMLocationViewViewModel) {
     self.viewModel = viewModel
   }
   
 
+}
+
+
+extension RMLocationView: UITableViewDelegate {
+  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    tableView.deselectRow(at: indexPath, animated: true)
+  }
+}
+
+extension RMLocationView: UITableViewDataSource {
+  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    return viewModel?.cellViewModels.count ?? 0
+  }
+  
+  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    
+    guard let cellViewmodels = viewModel?.cellViewModels else {
+      fatalError()
+    }
+    
+    guard let cell = tableView.dequeueReusableCell(
+      withIdentifier: RMLocationTableViewCell.cellIdentifier,
+      for: indexPath
+    ) as? RMLocationTableViewCell else {
+      fatalError()
+    }
+    
+    let cellViewModel = cellViewmodels[indexPath.row]
+    
+    var content = cell.defaultContentConfiguration()
+    content.text = cellViewModel.name
+    content.textProperties.color = .black
+    content.textProperties.font = .systemFont(ofSize: 16)
+    cell.contentConfiguration = content
+
+    
+    return cell
+  }
 }
