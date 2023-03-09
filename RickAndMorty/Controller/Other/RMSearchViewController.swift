@@ -58,7 +58,7 @@ class RMSearchViewController: UIViewController {
   }
   
   @objc private func didTapExecuteSearch() {
-    
+    //viewModel.executeSearch()
   }
   
   private func addConstraints() {
