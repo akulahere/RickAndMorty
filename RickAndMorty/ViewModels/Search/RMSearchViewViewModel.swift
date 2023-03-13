@@ -11,7 +11,7 @@ final class RMSearchViewViewModel {
   let config: RMSearchViewController.Config
   private var searchText = ""
   private var optionMapUpdateBlock: (((RMSearchInputViewViewModel.DynamicOption, String)) -> Void)?
-  private var searchResultHandler: (() -> Void)?
+  private var searchResultHandler: ((RMSearchResultViewModel) -> Void)?
   
   private var optionMap: [RMSearchInputViewViewModel.DynamicOption: String] = [:]
   
@@ -25,7 +25,7 @@ final class RMSearchViewViewModel {
     self.searchText = text
   }
   
-  public func registerSearchResultHandler(_ block: @escaping () -> Void) {
+  public func registerSearchResultHandler(_ block: @escaping (RMSearchResultViewModel) -> Void) {
     self.searchResultHandler = block
   }
   public func executeSearch() {
@@ -46,16 +46,63 @@ final class RMSearchViewViewModel {
       endpoint: config.type.endpoint,
       queryParameteres: queryParams
     )
-    RMService.shared.execute(request, expecting: RMGetAllCharacterResponse.self) { result in
+    
+    switch config.type.endpoint {
+    case .character:
+      makeSearchAPICall(RMGetAllCharacterResponse.self, request: request)
+    case .episode:
+      makeSearchAPICall(RMGetAllEpisodesResponse.self, request: request)
+    case .location:
+      makeSearchAPICall(RMGetAllLocationsResponse.self, request: request)
+    }
+    
+
+  }
+  
+  private func makeSearchAPICall<T: Codable>(_ type: T.Type, request: RMRequest) {
+    RMService.shared.execute(request, expecting: type) {[weak self] result in
       switch result {
-      case .success(let success):
-        print("Search result found: \(success.results.count)")
+      case .success(let model):
+        // Episodes, Characters: CollectionView, Location: Tableview
+        self?.processSearchResults(model: model)
+
       case .failure(let failure):
         print(failure.localizedDescription)
       }
     }
   }
   
+  private func processSearchResults(model: Codable) {
+    var resultsVM: RMSearchResultViewModel?
+    if let characterResults = model as? RMGetAllCharacterResponse {
+      resultsVM = .characters(characterResults.results.compactMap({ character in
+        return RMCharacterCollectionViewCellViewModel(
+          characteName: character.name,
+          characterStatus: character.status,
+          characterImageUrl: character.image
+        )
+      }))
+    }
+    else if let episodesResults = model as? RMGetAllEpisodesResponse {
+      resultsVM = .episodes(episodesResults.results.compactMap({ episode in
+        return RMCharacterEpisodeCollectionViewCellViewModel(
+          episodeDataUrl: episode.url
+        )
+      }))
+    }
+    else if let locationsResults = model as? RMGetAllLocationsResponse {
+      resultsVM = .locations(locationsResults.results.compactMap({ location in
+        return RMLocationTableViewCellViewModel(
+          location: location
+        )
+      }))
+    }
+    if let results = resultsVM {
+      self.searchResultHandler?(results)
+    } else {
+      
+    }
+  }
   
   
   public func set(value:String, for option: RMSearchInputViewViewModel.DynamicOption) {

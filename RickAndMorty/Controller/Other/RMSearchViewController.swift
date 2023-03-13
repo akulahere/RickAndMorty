@@ -23,6 +23,8 @@ class RMSearchViewController: UIViewController {
         case .location: return .location
         }
       }
+      
+ 
       var title: String {
         switch self {
         case .character:

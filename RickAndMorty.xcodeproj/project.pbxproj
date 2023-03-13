@@ -72,6 +72,7 @@
 		66E7560029A7866E00FD3021 /* RMEpisodeListViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E755FF29A7866E00FD3021 /* RMEpisodeListViewViewModel.swift */; };
 		66E7560229A799A000FD3021 /* RMGetAllEpisodesResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E7560129A799A000FD3021 /* RMGetAllEpisodesResponse.swift */; };
 		66F7BB5129BB458E00F344BD /* RMSearchOptionPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66F7BB5029BB458E00F344BD /* RMSearchOptionPickerViewController.swift */; };
+		66F7BB5629BF7D2400F344BD /* RMSearchResultViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66F7BB5529BF7D2400F344BD /* RMSearchResultViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -142,6 +143,7 @@
 		66E755FF29A7866E00FD3021 /* RMEpisodeListViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMEpisodeListViewViewModel.swift; sourceTree = "<group>"; };
 		66E7560129A799A000FD3021 /* RMGetAllEpisodesResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMGetAllEpisodesResponse.swift; sourceTree = "<group>"; };
 		66F7BB5029BB458E00F344BD /* RMSearchOptionPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMSearchOptionPickerViewController.swift; sourceTree = "<group>"; };
+		66F7BB5529BF7D2400F344BD /* RMSearchResultViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMSearchResultViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -349,6 +351,7 @@
 				66B5418829B9CEDC00E0C143 /* RMSearchViewViewModel.swift */,
 				66B5418D29B9D09600E0C143 /* RMNoSearchResultsViewViewModel.swift */,
 				66B5419129B9D0DC00E0C143 /* RMSearchInputViewViewModel.swift */,
+				66F7BB5529BF7D2400F344BD /* RMSearchResultViewModel.swift */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -570,6 +573,7 @@
 				66E755EC29A35D3400FD3021 /* RMCharacterEpisodeCollectionViewCell.swift in Sources */,
 				6625B55F299A516A006334F1 /* RMCharacterViewController.swift in Sources */,
 				66C1A36E29B735390008B42A /* RMLocationView.swift in Sources */,
+				66F7BB5629BF7D2400F344BD /* RMSearchResultViewModel.swift in Sources */,
 				66E7560029A7866E00FD3021 /* RMEpisodeListViewViewModel.swift in Sources */,
 				66E755F729A76F0A00FD3021 /* RMAPICacheManager.swift in Sources */,
 				66E7560229A799A000FD3021 /* RMGetAllEpisodesResponse.swift in Sources */,
