@@ -12,7 +12,7 @@ protocol RMSearchViewDelegate: AnyObject {
 }
 
 class RMSearchView: UIView {
-  weak var delegate: RMSearchViewDelegate?
+  weak var  delegate: RMSearchViewDelegate?
   let viewModel: RMSearchViewViewModel
   // MARK: - Subviews
   private let noResultsView = RMNoSearchResultsView()
@@ -22,12 +22,16 @@ class RMSearchView: UIView {
   init(frame: CGRect, viewModel: RMSearchViewViewModel) {
     self.viewModel = viewModel
     super.init(frame: frame)
-    backgroundColor = .systemBackground
     translatesAutoresizingMaskIntoConstraints = false
     addSubviews(noResultsView, searchInputView)
     addConstraints()
+    
     searchInputView.configure(with: RMSearchInputViewViewModel(type: viewModel.config.type))
     searchInputView.delegate = self
+    
+    viewModel.registerOptionChangeBlock { tuple in
+      self.searchInputView.update(option: tuple.0, value: tuple.1)
+    }
   }
   
   required init?(coder: NSCoder) {
@@ -76,6 +80,4 @@ extension RMSearchView: RMSearchInputViewDelegate {
   func rmSearchInputView(_ inputView: RMSearchInputView, didSelectOption option: RMSearchInputViewViewModel.DynamicOption) {
     delegate?.rmSearchView(self, didSelectOption: option)
   }
-  
-  
 }

@@ -9,7 +9,7 @@ import UIKit
 
 class RMSearchOptionPickerViewController: UIViewController {
   private let option: RMSearchInputViewViewModel.DynamicOption
-  private let selectionBlock: (String) -> Void
+  private let selectionBlock: ((String) -> Void)
   private let tableView: UITableView = {
     let table = UITableView()
     table.translatesAutoresizingMaskIntoConstraints = false
@@ -40,7 +40,6 @@ class RMSearchOptionPickerViewController: UIViewController {
   
   private func setUpTable() {
     view.addSubview(tableView)
-    print("table set up")
     tableView.delegate = self
     tableView.dataSource = self
     NSLayoutConstraint.activate([
@@ -62,8 +61,8 @@ extension RMSearchOptionPickerViewController: UITableViewDelegate, UITableViewDa
   
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
     let choice = option.choices[indexPath.row]
+    let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
     cell.textLabel?.text = choice.uppercased()
 
     return cell

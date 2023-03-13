@@ -28,6 +28,8 @@ final class RMSearchInputView: UIView {
     }
   }
   
+  private var stackView: UIStackView?
+  
   // MARK: - Init
   override init(frame: CGRect) {
     super.init(frame: frame)
@@ -94,8 +96,9 @@ final class RMSearchInputView: UIView {
   }
   
   private func createOptionsSelectionViews(options: [RMSearchInputViewViewModel.DynamicOption]) {
-    let stackView = createOptionStackView()
     
+    let stackView = createOptionStackView()
+    self.stackView = stackView
     
     options.enumerated().forEach { (index, option) in
       let button = createButton(tag: index, option: option)
@@ -117,7 +120,7 @@ final class RMSearchInputView: UIView {
   
   public func configure(with viewModel: RMSearchInputViewViewModel) {
     searchBar.placeholder = viewModel.searchPlaceHolderText
-    // TODO: Fix heoight of input view for episode with no options
+    // TODO: Fix heoight  of input view for episode with no options
     self.viewModel = viewModel
   }
   
@@ -126,5 +129,23 @@ final class RMSearchInputView: UIView {
     searchBar.becomeFirstResponder()
   }
   
+  public func update(option: RMSearchInputViewViewModel.DynamicOption, value: String) {
+    guard let buttons = stackView?.arrangedSubviews as? [UIButton],
+          let allOptions = viewModel?.options,
+          let index = allOptions.firstIndex(of: option) else {
+      return
+    }
+    let button: UIButton = buttons[index]
+    print(button)
+    button.setAttributedTitle(
+      NSAttributedString(
+        string: value.uppercased(),
+        attributes: [
+          .font: UIFont.systemFont(ofSize: 18, weight: .medium),
+          .foregroundColor: UIColor.link
+        ]
+      ),
+      for: .normal)
+  }
   
 }

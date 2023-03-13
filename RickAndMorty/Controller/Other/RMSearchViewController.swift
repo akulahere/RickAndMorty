@@ -30,15 +30,15 @@ class RMSearchViewController: UIViewController {
     let type: `Type`
   }
   
-  
   private let searchView: RMSearchView
   private let viewModel: RMSearchViewViewModel
+
   // MARK: - Init
   
   init(config: Config) {
     let viewModel = RMSearchViewViewModel(config: config)
     self.viewModel = viewModel
-    self.searchView = RMSearchView(frame: .zero, viewModel: RMSearchViewViewModel(config: config))
+    self.searchView = RMSearchView(frame: .zero, viewModel: viewModel)
     super.init(nibName: nil, bundle: nil)
   }
   
@@ -50,6 +50,7 @@ class RMSearchViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    
     title = viewModel.config.type.title
     view.backgroundColor = .systemBackground
     view.addSubview(searchView)
@@ -80,18 +81,18 @@ class RMSearchViewController: UIViewController {
       searchView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
     ])
   }
-  
 }
 
 extension RMSearchViewController: RMSearchViewDelegate {
   func rmSearchView(_ searchView: RMSearchView, didSelectOption option: RMSearchInputViewViewModel.DynamicOption) {
     let vc = RMSearchOptionPickerViewController(option: option) { selection in
-      print("Did select \(selection)")
+      DispatchQueue.main.async {
+        self.viewModel.set(value: selection, for: option)
+      }
     }
+
     vc.sheetPresentationController?.detents = [.medium()]
     vc.sheetPresentationController?.prefersGrabberVisible = true
     present(vc, animated: true)
   }
-  
-  
 }
