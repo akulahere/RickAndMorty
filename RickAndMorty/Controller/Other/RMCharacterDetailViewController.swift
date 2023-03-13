@@ -111,7 +111,7 @@ extension RMCharacterDetailViewController: UICollectionViewDelegate, UICollectio
     switch sectionType {
     case .photo, .information:
       break
-    case .episodes(let viewModel):
+    case .episodes:
       let episodes = self.viewModel.episodes
       let selection = episodes[indexPath.row]
       let vc = RMEpisodeDetailViewController(url: selection)

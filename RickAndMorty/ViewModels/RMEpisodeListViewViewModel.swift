@@ -108,6 +108,7 @@ final class RMEpisodeListViewViewModel: NSObject {
         }
       case .failure(let failure):
         self?.isLoadingMoreEpisodes = false
+        print(failure.localizedDescription)
         return
       }
     }

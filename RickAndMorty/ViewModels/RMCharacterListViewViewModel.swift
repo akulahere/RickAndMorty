@@ -95,6 +95,7 @@ final class RMCharacterListViewViewModel: NSObject {
         }
       case .failure(let failure):
         self?.isLoadingMoreCharacters = false
+        print(failure.localizedDescription)
         return
       }
     }
