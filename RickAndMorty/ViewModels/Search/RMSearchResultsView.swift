@@ -30,11 +30,34 @@ class RMSearchResultsView: UIView {
   }()
   
   private var locationCellViewModeils: [RMLocationTableViewCellViewModel] = []
+  private var collectionViewCellViewModels: [any Hashable] = []
+  
+  
+  
+  private let collectionView: UICollectionView = {
+    let layout = UICollectionViewFlowLayout()
+    layout.scrollDirection = .vertical
+    layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+    let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+    collectionView.isHidden = true
+    collectionView.translatesAutoresizingMaskIntoConstraints = false
+    collectionView.register(
+      RMCharacterCollectionViewCell.self,
+      forCellWithReuseIdentifier: RMCharacterCollectionViewCell.cellIdentifier)
+    collectionView.register(
+      RMCharacterEpisodeCollectionViewCell.self,
+      forCellWithReuseIdentifier: RMCharacterEpisodeCollectionViewCell.cellIdentifier)
+    collectionView.register(RMFooterLoadingCollectionReusableView.self,
+                            forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
+                            withReuseIdentifier: RMFooterLoadingCollectionReusableView.identifier)
+    return collectionView
+  }()
+  
   override init(frame: CGRect) {
     super.init(frame: frame)
     isHidden = true
     translatesAutoresizingMaskIntoConstraints = false
-    addSubviews(tableView)
+    addSubviews(tableView, collectionView)
     addConstraints()
   }
   
@@ -49,16 +72,24 @@ class RMSearchResultsView: UIView {
     
     switch viewModel {
     case .characters(let viewModels):
-      
+      self.collectionViewCellViewModels = viewModels
       setUpCollectionView()
     case .locations(let viewModels):
       setUpTableView(viewModels: viewModels)
     case .episodes(let viewModels):
+      self.collectionViewCellViewModels = viewModels
       setUpCollectionView()
     }
   }
   
   private func setUpCollectionView() {
+    tableView.isHidden = true
+    collectionView.isHidden = false
+    
+    collectionView.delegate = self
+    collectionView.dataSource = self
+    
+    collectionView.reloadData()
     
   }
   
@@ -66,6 +97,7 @@ class RMSearchResultsView: UIView {
     tableView.delegate = self
     tableView.dataSource = self
     tableView.isHidden = false
+    collectionView.isHidden = true
     self.locationCellViewModeils = viewModels
     tableView.reloadData()
   }
@@ -76,6 +108,11 @@ class RMSearchResultsView: UIView {
       tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
       tableView.trailingAnchor.constraint(equalTo: trailingAnchor),
       tableView.bottomAnchor.constraint(equalTo: bottomAnchor),
+      
+      collectionView.topAnchor.constraint(equalTo: topAnchor),
+      collectionView.leftAnchor.constraint(equalTo: leftAnchor),
+      collectionView.rightAnchor.constraint(equalTo: rightAnchor),
+      collectionView.bottomAnchor.constraint(equalTo: bottomAnchor),
     ])
   }
   
@@ -104,4 +141,60 @@ extension RMSearchResultsView: UITableViewDataSource, UITableViewDelegate {
     let viewModel = locationCellViewModeils[indexPath.row]
     delegate?.rmSearchResultsView(self, didTapLocationAt: indexPath.row)
   }
+}
+
+
+// MARK: - CollectionView
+
+extension RMSearchResultsView: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    return collectionViewCellViewModels.count
+  }
+  
+  func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    
+    let currentViewModel = collectionViewCellViewModels[indexPath.row]
+    if let characterVM = currentViewModel as? RMCharacterCollectionViewCellViewModel {
+      guard let cell = collectionView.dequeueReusableCell(
+        withReuseIdentifier: RMCharacterCollectionViewCell.cellIdentifier,
+        for: indexPath
+      ) as? RMCharacterCollectionViewCell else {
+        fatalError()
+      }
+      cell.configure(with: characterVM)
+      return cell
+    }
+    guard let cell = collectionView.dequeueReusableCell(
+      withReuseIdentifier: RMCharacterEpisodeCollectionViewCell.cellIdentifier,
+      for: indexPath
+    ) as? RMCharacterEpisodeCollectionViewCell else {
+      fatalError()
+    }
+    if let episodeVM = currentViewModel as? RMCharacterEpisodeCollectionViewCellViewModel {
+      cell.configure(with: episodeVM)
+    }
+    return cell
+  }
+  
+  func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    collectionView.deselectItem(at: indexPath, animated: true)
+  }
+  
+  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    // Character
+    let currentViewModel = collectionViewCellViewModels[indexPath.row]
+    if currentViewModel is RMCharacterCollectionViewCellViewModel {
+      let bounds = UIScreen.main.bounds
+      let width = (bounds.width - 30) / 2
+      let height = width * 1.5
+      return CGSize(width: width,
+                    height: height * 0.8)
+    }
+    // Episode
+    let bounds = collectionView.bounds
+    let width = bounds.width - 20
+    return CGSize(width: width,
+                  height: 100)
+  }
+  
 }
