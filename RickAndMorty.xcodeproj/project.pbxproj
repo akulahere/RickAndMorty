@@ -73,6 +73,7 @@
 		66E7560229A799A000FD3021 /* RMGetAllEpisodesResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E7560129A799A000FD3021 /* RMGetAllEpisodesResponse.swift */; };
 		66F7BB5129BB458E00F344BD /* RMSearchOptionPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66F7BB5029BB458E00F344BD /* RMSearchOptionPickerViewController.swift */; };
 		66F7BB5629BF7D2400F344BD /* RMSearchResultViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66F7BB5529BF7D2400F344BD /* RMSearchResultViewModel.swift */; };
+		66F7BB5829C0685800F344BD /* RMSearchResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66F7BB5729C0685800F344BD /* RMSearchResultsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -144,6 +145,7 @@
 		66E7560129A799A000FD3021 /* RMGetAllEpisodesResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMGetAllEpisodesResponse.swift; sourceTree = "<group>"; };
 		66F7BB5029BB458E00F344BD /* RMSearchOptionPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMSearchOptionPickerViewController.swift; sourceTree = "<group>"; };
 		66F7BB5529BF7D2400F344BD /* RMSearchResultViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMSearchResultViewModel.swift; sourceTree = "<group>"; };
+		66F7BB5729C0685800F344BD /* RMSearchResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMSearchResultsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -352,6 +354,7 @@
 				66B5418D29B9D09600E0C143 /* RMNoSearchResultsViewViewModel.swift */,
 				66B5419129B9D0DC00E0C143 /* RMSearchInputViewViewModel.swift */,
 				66F7BB5529BF7D2400F344BD /* RMSearchResultViewModel.swift */,
+				66F7BB5729C0685800F344BD /* RMSearchResultsView.swift */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -526,6 +529,7 @@
 				66B5418E29B9D09600E0C143 /* RMNoSearchResultsViewViewModel.swift in Sources */,
 				6625B56F299A73EF006334F1 /* RMSingleLocation.swift in Sources */,
 				6625B571299A7497006334F1 /* RMCharacterStatus.swift in Sources */,
+				66F7BB5829C0685800F344BD /* RMSearchResultsView.swift in Sources */,
 				6625B573299A74AC006334F1 /* RMCharacterGender.swift in Sources */,
 				66B5418429B7835100E0C143 /* RMLocationDetailViewViewModel.swift in Sources */,
 				6625B584299CD97E006334F1 /* RMCharacterDetailViewController.swift in Sources */,

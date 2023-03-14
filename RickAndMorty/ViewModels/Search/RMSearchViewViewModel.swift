@@ -12,6 +12,7 @@ final class RMSearchViewViewModel {
   private var searchText = ""
   private var optionMapUpdateBlock: (((RMSearchInputViewViewModel.DynamicOption, String)) -> Void)?
   private var searchResultHandler: ((RMSearchResultViewModel) -> Void)?
+  private var noResultsHandler: (() -> Void)?
   
   private var optionMap: [RMSearchInputViewViewModel.DynamicOption: String] = [:]
   
@@ -23,6 +24,10 @@ final class RMSearchViewViewModel {
   // MARK: - Public
   public func set(query text: String) {
     self.searchText = text
+  }
+  
+  public func registerNoResulstHandler(_ block: @escaping () -> Void) {
+    self.noResultsHandler = block
   }
   
   public func registerSearchResultHandler(_ block: @escaping (RMSearchResultViewModel) -> Void) {
@@ -55,8 +60,6 @@ final class RMSearchViewViewModel {
     case .location:
       makeSearchAPICall(RMGetAllLocationsResponse.self, request: request)
     }
-    
-
   }
   
   private func makeSearchAPICall<T: Codable>(_ type: T.Type, request: RMRequest) {
@@ -65,9 +68,10 @@ final class RMSearchViewViewModel {
       case .success(let model):
         // Episodes, Characters: CollectionView, Location: Tableview
         self?.processSearchResults(model: model)
-
+        
       case .failure(let failure):
-        print(failure.localizedDescription)
+        self?.handleNoResults()
+        break
       }
     }
   }
@@ -100,10 +104,13 @@ final class RMSearchViewViewModel {
     if let results = resultsVM {
       self.searchResultHandler?(results)
     } else {
-      
+      handleNoResults()
     }
   }
   
+  private func handleNoResults() {
+    noResultsHandler?()
+  }
   
   public func set(value:String, for option: RMSearchInputViewViewModel.DynamicOption) {
     optionMap[option] = value

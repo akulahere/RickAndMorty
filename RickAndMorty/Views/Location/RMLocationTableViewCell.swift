@@ -1,10 +1,9 @@
-//
+
 //  RMLocationTableViewCell.swift
 //  RickAndMorty
 //
 //  Created by Dmytro Akulinin on 07.03.2023.
 //
-
 import UIKit
 
 class RMLocationTableViewCell: UITableViewCell {

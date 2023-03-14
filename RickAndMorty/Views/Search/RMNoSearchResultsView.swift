@@ -54,7 +54,7 @@ final class RMNoSearchResultsView: UIView {
     ])
   }
   
-  private func configure() {
+  public func configure() {
     label.text = viewModel.title
     iconView.image = viewModel.image
   }

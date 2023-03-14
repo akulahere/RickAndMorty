@@ -17,29 +17,47 @@ class RMSearchView: UIView {
   // MARK: - Subviews
   private let noResultsView = RMNoSearchResultsView()
   private let searchInputView = RMSearchInputView()
+  private let resultsView = RMSearchResultsView()
   
   // MARK: - Init
   init(frame: CGRect, viewModel: RMSearchViewViewModel) {
     self.viewModel = viewModel
     super.init(frame: frame)
     translatesAutoresizingMaskIntoConstraints = false
-    addSubviews(noResultsView, searchInputView)
+    addSubviews(resultsView, noResultsView, searchInputView)
     addConstraints()
     
     searchInputView.configure(with: RMSearchInputViewViewModel(type: viewModel.config.type))
     searchInputView.delegate = self
-    
-    viewModel.registerOptionChangeBlock { tuple in
-      self.searchInputView.update(option: tuple.0, value: tuple.1)
-    }
-    
-    viewModel.registerSearchResultHandler { results in
-      print(results)
-    }
+    setUpHandlers(viewModels: viewModel)
+
   }
   
   required init?(coder: NSCoder) {
     fatalError()
+  }
+  
+  private func setUpHandlers(viewModels: RMSearchViewViewModel) {
+    viewModel.registerOptionChangeBlock { tuple in
+      self.searchInputView.update(option: tuple.0, value: tuple.1)
+    }
+    
+    viewModel.registerNoResulstHandler { [weak self] in
+      DispatchQueue.main.async {
+        self?.noResultsView.isHidden = false
+        self?.resultsView.isHidden = true
+      }
+    }
+    
+    viewModel.registerSearchResultHandler { [weak self] results in
+      DispatchQueue.main.async {
+        print(String(describing: results))
+
+        self?.resultsView.configure(with: results)
+        self?.noResultsView.isHidden = true
+        self?.resultsView.isHidden = false
+      }
+    }
   }
   
   private func addConstraints() {
@@ -50,11 +68,19 @@ class RMSearchView: UIView {
       searchInputView.trailingAnchor.constraint(equalTo: trailingAnchor),
       searchInputView.heightAnchor.constraint(equalToConstant: viewModel.config.type == .episode ? 55 : 110),
       
+      // Results view
+      resultsView.topAnchor.constraint(equalTo: searchInputView.bottomAnchor),
+      resultsView.leadingAnchor.constraint(equalTo: leadingAnchor),
+      resultsView.trailingAnchor.constraint(equalTo: trailingAnchor),
+      resultsView.bottomAnchor.constraint(equalTo: bottomAnchor),
+      
       // No results
       noResultsView.widthAnchor.constraint(equalToConstant: 150),
       noResultsView.heightAnchor.constraint(equalToConstant: 150),
       noResultsView.centerXAnchor.constraint(equalTo: centerXAnchor),
       noResultsView.centerYAnchor.constraint(equalTo: centerYAnchor),
+      
+
     ])
   }
   
