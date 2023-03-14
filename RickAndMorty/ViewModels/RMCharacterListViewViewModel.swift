@@ -83,7 +83,7 @@ final class RMCharacterListViewViewModel: NSObject {
         let total = originalCount! + newCount
         let startingIndex = total - newCount - 1
         
-      
+        
         let indexPathsToAdd: [IndexPath] = Array(startingIndex..<(startingIndex + newCount)).compactMap {
           return IndexPath(row: $0, section: 0)
         }
@@ -91,7 +91,7 @@ final class RMCharacterListViewViewModel: NSObject {
         DispatchQueue.main.async {
           self?.delegate?.didLoadMoreCharacters(with: indexPathsToAdd)
           self?.isLoadingMoreCharacters = false
-
+          
         }
       case .failure(let failure):
         self?.isLoadingMoreCharacters = false
