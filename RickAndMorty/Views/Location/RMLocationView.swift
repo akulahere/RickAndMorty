@@ -26,6 +26,14 @@ class RMLocationView: UIView {
       UIView.animate(withDuration: 0.3) {
         self.tableView.alpha = 1
       }
+      viewModel?.registerDidFinishPagination { [weak self] in
+        DispatchQueue.main.async {
+          // Disapear loading indicator
+          self?.tableView.tableFooterView = nil
+          // Reload data
+          self?.tableView.reloadData()
+        }
+      }
     }
   }
   
@@ -80,8 +88,6 @@ class RMLocationView: UIView {
   func configure(with viewModel: RMLocationViewViewModel) {
     self.viewModel = viewModel
   }
-  
-  
 }
 
 
@@ -141,7 +147,6 @@ extension RMLocationView: UIScrollViewDelegate {
           self?.showLoadingIndicator()
         }
         viewModel.fetchAdditionalLocations()
-
       }
       timer.invalidate()
     }
