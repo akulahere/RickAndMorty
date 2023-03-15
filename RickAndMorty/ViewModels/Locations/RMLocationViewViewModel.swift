@@ -13,6 +13,11 @@ protocol RMLocationViewViewModelDelegate: AnyObject {
 
 final class RMLocationViewViewModel {
   weak var delegate: RMLocationViewViewModelDelegate?
+  public var isLoadingMoreLocation = false
+  
+  public var shoudShowLoadMoreIndicator: Bool {
+    return apiInfo?.next != nil
+  }
   
   private var locations: [RMLocation] = [] {
     didSet {
@@ -24,11 +29,58 @@ final class RMLocationViewViewModel {
       }
     }
   }
+  
   private var apiInfo: RMGetAllLocationsResponse.Info?
   
   public private(set) var cellViewModels: [RMLocationTableViewCellViewModel] = []
+  
+  // MARK: - Init
   init() {
     
+  }
+  
+  /// Paginate if additional locations are needed
+  public func fetchAdditionalLocations() {
+    guard !isLoadingMoreLocation else {
+      return
+    }
+    
+    guard let nextUrlString = apiInfo?.next,
+          let url = URL(string: nextUrlString) else {
+      return
+    }
+    
+    isLoadingMoreLocation = true
+    
+    guard let request = RMRequest(url: url) else {
+      isLoadingMoreLocation = false
+      return
+    }
+    
+    
+    
+    RMService.shared.execute(request,
+                             expecting: RMGetAllLocationsResponse.self) {[weak self] result in
+      switch result {
+      case .success(let responseModel):
+        let moreResults = responseModel.results
+        let info = responseModel.info
+        print("More locations \(info.count)")
+        self?.apiInfo = info
+        self?.cellViewModels.append(contentsOf: moreResults.compactMap({ location in
+          return RMLocationTableViewCellViewModel(location: location)
+        }))
+        
+        
+        DispatchQueue.main.async {
+          self?.isLoadingMoreLocation = false
+        }
+      case .failure(let failure):
+        self?.isLoadingMoreLocation = false
+        print(failure.localizedDescription)
+        return
+      }
+    }
   }
   
   public func locations(at index: Int) -> RMLocation? {
